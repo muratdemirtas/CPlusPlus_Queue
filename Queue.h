@@ -1,7 +1,7 @@
 
 #ifndef _QUEUELIST_H
 #define _QUEUELIST_H
-#include <QCoreApplication>
+#include "stdlib.h"
 
 template<typename T>
 class QueueList {
