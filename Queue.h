@@ -1,15 +1,48 @@
 
 #ifndef _QUEUELIST_H
 #define _QUEUELIST_H
-#include "stdlib.h"
 
+#include "stdio.h"     /**< called for printf() */
+
+/**
+ * @brief Debug types for printf
+ */
+typedef enum debug_types_t
+{
+    IS_INFO    = 0x0001,    /**< for info messages */
+    IS_FULL    = 0x0002,    /**< for queue full  */
+    IS_FATAL   = 0x0004,    /**< for fatal errors messages */
+    IS_ERROR   = 0x0008     /**< for errors messages */
+}debug_types_t;
+
+/**
+ * @brief print debug message to stdout or semihosting channel
+ * @tparam Debug type of message
+ * @tparam debug message to print
+ */
+template<typename T,typename K>
+void Print_Message(T debug_type, K debug_message)
+{
+    /*print to stdout or semihosting channel*/
+    printf("%d,%s\n",debug_type, debug_message);
+}
+
+/**
+ * @brief QueueList Class
+ * @tparam type of queue(int,string??)
+ */
 template<typename T>
 class QueueList {
-  public:
-    // init the queue (constructor).
+public:
+
+    /**
+     * @brief Queuelist constructor
+     */
     QueueList ();
 
-    // clear the queue (destructor).
+    /**
+     * @brief Queuelist deconstructor
+     */
     ~QueueList ();
 
     // push an item to the queue.
@@ -21,59 +54,73 @@ class QueueList {
     // get an item from the queue.
     T peek () const;
 
-    // check if the queue is empty.
+    /**
+     * @brief Check queue is empty or full?
+     */
     bool isEmpty () const;
 
-    // get the number of items in the queue.
-    int count () const;
+    /**
+     * @brief Get current items size of queue.
+     */
+    int Count () const;
 
-    // set the printer of the queue.
 
-  private:
-    // exit report method in case of error.
-    void exit (const char * m) const;
+private:
 
-    // led blinking method in case of error.
-    void blink () const;
-
-    // the structure of each node in the list.
+    /**
+     * @brief the structure of each node in the list.
+     */
     typedef struct node {
-      T item;      // the item in the node.
-      node * next; // the next node in the list.
+      T item;       /**< the node item in the list */
+      node * next;  /**< the next node item in the list */
     } node;
 
-    typedef node * link; // synonym for pointer to a node.
+    typedef node * link;  /**< point node to link */
 
-    int size;        // the size of the queue.
-    link head;       // the head of the list.
-    link tail;       // the tail of the list.
+    int  size;       /**<  size of queue list */
+    link head;       /**<  head item of queue list */
+    link tail;       /**<  tail item of queuelist */
 };
 
-// init the queue (constructor).
+/**
+ * @brief QueueList constructor
+ * @tparam type of queue(int,string??)
+ */
 template<typename T>
 QueueList<T>::QueueList () {
-  size = 0;       // set the size of queue to zero.
-  head = NULL;    // set the head of the list to point nowhere.
-  tail = NULL;    // set the tail of the list to point nowhere.
+
+  /* create a new queue list*/
+
+  size = 0;      /* define size of queue */
+  head = NULL;   /* define head item with null, because queue is now created  */
+  tail = NULL;   /* define tail item with null, because queue is now created  */
 
 }
 
-// clear the queue (destructor).
+/**
+ * @brief QueueList deconstructor
+ * @tparam type of queue(int,string??)
+ */
 template<typename T>
 QueueList<T>::~QueueList () {
-  // deallocate memory space of each node in the list.
+
+  /* destroy current queue list and deallocate memory*/
+
+  /*scan queue from head to tail*/
   for (link t = head; t != NULL; head = t) {
-    t = head->next; delete head;
+    t = head->next; 
+    delete head;
   }
 
-  size = 0;       // set the size of queue to zero.
-  tail = NULL;    // set the tail of the list to point nowhere.
+  size = 0;       /* set the size of queue to zero. */
+  tail = NULL;    /* set the tail of the list to point nowhere. */
 
 }
 
 // push an item to the queue.
 template<typename T>
 void QueueList<T>::push (const T i) {
+    
   // create a temporary pointer to tail.
   link t = tail;
 
@@ -82,7 +129,7 @@ void QueueList<T>::push (const T i) {
 
   // if there is a memory allocation error.
   if (tail == NULL)
-    int k =0 ;
+    Print_Message(IS_FATAL,"Memory Allocation Error");
 
   // set the next of the new node.
   tail->next = NULL;
@@ -122,7 +169,10 @@ T QueueList<T>::pop () {
   return item;
 }
 
-// get an item from the queue.
+/**
+ * @brief Check queue is empty or full?
+ * @tparam Type of queue
+ */
 template<typename T>
 T QueueList<T>::peek () const {
   // check if the queue is empty.
@@ -133,16 +183,25 @@ T QueueList<T>::peek () const {
   return head->item;
 }
 
-// check if the queue is empty.
+/**
+ * @brief Check queue is empty or full?
+ * @tparam Type of queue
+ */
 template<typename T>
 bool QueueList<T>::isEmpty () const {
-  return head == NULL;
+
+  return head == NULL; /* return if head is not null*/
 }
 
-// get the number of items in the queue.
+/**
+ * @brief Get current items size of queue.
+ * @tparam Type of queue
+ */
 template<typename T>
-int QueueList<T>::count () const {
-  return size;
+int QueueList<T>::Count () const {
+
+  return size; /* return size of queue list*/
+
 }
 
 #endif // _QUEUELIST_H
