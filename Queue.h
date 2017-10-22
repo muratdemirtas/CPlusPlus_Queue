@@ -1,5 +1,15 @@
+/**
+  ******************************************************************************
+  * @file    Queue.h
+  * @author  MCD Application Team
+  * @version V1.0
+  * @date    23-October-2017
+  ******************************************************************************
+  *
+  */
 
-#ifndef _QUEUELIST_H
+/**< define library */
+#ifndef _QUEUELIST_H 
 #define _QUEUELIST_H
 
 #include "stdio.h"     /**< called for printf() */
@@ -24,7 +34,7 @@ template<typename T,typename K>
 void Print_Message(T debug_type, K debug_message)
 {
     /*print to stdout or semihosting channel*/
-    printf("%d,%s\n",debug_type, debug_message);
+    printf("Debug: %d, Info: %s\n",debug_type, debug_message);
 }
 
 /**
@@ -45,10 +55,16 @@ public:
      */
     ~QueueList ();
 
-    // push an item to the queue.
+    /**
+     * @brief push(enqueue) an item to the queue.
+     * @param parameter to queue
+     */
     void push (const T i);
 
-    // pop an item from the queue.
+    /**
+     * @brief pop(dequeue) an item to the queue.
+     * @return queue list value
+     */
     T pop ();
 
     // get an item from the queue.
@@ -108,7 +124,7 @@ QueueList<T>::~QueueList () {
 
   /*scan queue from head to tail*/
   for (link t = head; t != NULL; head = t) {
-    t = head->next; 
+    t = head->next;
     delete head;
   }
 
@@ -117,10 +133,13 @@ QueueList<T>::~QueueList () {
 
 }
 
-// push an item to the queue.
+/**
+ * @brief push(enqueue) an item to the queue.
+ * @param parameter to queue
+ */
 template<typename T>
 void QueueList<T>::push (const T i) {
-    
+
   // create a temporary pointer to tail.
   link t = tail;
 
@@ -149,37 +168,52 @@ void QueueList<T>::push (const T i) {
   size++;
 }
 
-// pop an item from the queue.
+/**
+ * @brief pop(dequeue) an item to the queue.
+ * @return queue list value
+ */
 template<typename T>
 T QueueList<T>::pop () {
-  // check if the queue is empty.
+
+  /* check if the queue is empty. */
   if (isEmpty ())
-    int k=0;
+  {
+    Print_Message(IS_ERROR,"Queue is empty!!,exiting.");
+    return NULL; /*return null value*/
+  }
 
-  // get the item of the head node.
-  T item = head->item;
+  T item = head->item; /* get the item of the head node. */
 
-  // remove only the head node.
-  link t = head->next; delete head; head = t;
+  /* remove only the head node for mechanism. */
+  link t = head->next;
+  delete head;
 
-  // decrease the items.
+  /* previous tail node is now head node */
+  head = t;
+
+  /* decrease the items. */
   size--;
 
-  // return the item.
+  /* return the item. */
   return item;
 }
 
 /**
- * @brief Check queue is empty or full?
- * @tparam Type of queue
+ * @brief Get a head element of queue list
+ * @tparam head value of queue
  */
 template<typename T>
 T QueueList<T>::peek () const {
-  // check if the queue is empty.
-  if (isEmpty ())
-    exit ("QUEUE: can't peek item from queue: queue is empty.");
 
-  // return the item of the head node.
+  /* check if the queue is empty. */
+  if (isEmpty ())
+  {
+    Print_Message(IS_ERROR,"Queue is empty!!,exiting.");
+    /*return null value*/
+    return NULL;
+  }
+
+  /* if we are here return the item of the head node. */
   return head->item;
 }
 
@@ -190,7 +224,7 @@ T QueueList<T>::peek () const {
 template<typename T>
 bool QueueList<T>::isEmpty () const {
 
-  return head == NULL; /* return if head is not null*/
+  return head == NULL;   /* return if head is not null*/
 }
 
 /**
