@@ -148,8 +148,11 @@ void QueueList<T>::push (const T i) {
 
   // if there is a memory allocation error.
   if (tail == NULL)
+  {
     Print_Message(IS_FATAL,"Memory Allocation Error");
-
+    return NULL;
+  }
+ 
   // set the next of the new node.
   tail->next = NULL;
 
